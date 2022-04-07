@@ -15,7 +15,8 @@ const APP_SHELL = [
     'img/avatars/spiderman.jpg',
     'img/avatars/thor.jpg',
     'img/avatars/wolverine.jpg',
-    'js/app.js'
+    'js/app.js',
+    'js/sw-utils.js'
 ];
 
 const APP_SHELL_INMUTABLE = [
@@ -54,17 +55,18 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-    const respuesta = caches.match(e.rquest).then(res => {
-        if (res) {
-            return res;
-        } else {
-            return fetch(e.request).then(newRes => {
-                return actualizaCacheDinamico(DYNAMIC_CACHE, e.request, newRes);
-            });
+    const respuesta = caches.match(e.rquest)
+        .then(res => {
+            if (res) {
+                return res;
+            } else {
+                return fetch(e.request).then(newRes => {
+                    return actualizaCacheDinamico(DYNAMIC_CACHE, e.request, newRes);
+                });
 
-        }
+            }
 
-    });
+        });
     e.respondWith(respuesta);
 
 });
